@@ -107,3 +107,44 @@ class Neuron:
             result, cost = self.evaluate(X, Y)
 
             return result, cost
+
+    def train(self, X, Y, iterations=5000, alpha=0.05, verbose=True, graph=True, step=100):
+        """
+        trains the neuron and updates __W, __b, and __A
+        """
+        if type(iterations) is not int:
+            raise TypeError("iterations must be an integer")
+        if iterations <= 0:
+            raise ValueError("iterations must be a positive integer")
+        if type(alpha) is not float:
+            raise TypeError("alpha must be a float")
+        if alpha <= 0:
+            raise ValueError("alpha must be positive")
+
+        if graph:
+            import matplotlib.pyplot as plt
+            x_points = np.arange(0, iterations + 1, step)
+            points = []
+
+        for itr in range(iterations):
+            A = self.forward_prop(X)
+            if verbose and itr % step == 0:
+                cost = self.cost(Y, A)
+                print(f"Cost after {itr} iterations: {cost}")
+            if graph and itr % step == 0:
+                points.append(self.cost(Y, A))
+            self.gradient_descent(X, Y, A, alpha)
+
+        if verbose:
+            cost = self.cost(Y, A)
+            print(f"Cost after {iterations} iterations: {cost}")
+
+        if graph:
+            points.append(self.cost(Y, A))
+            plt.plot(x_points, points, 'b')
+            plt.xlabel("Iteration")
+            plt.ylabel("Cost")
+            plt.title("Training Cost")
+            plt.show()
+
+        return self.evaluate(X, Y)
