@@ -51,3 +51,12 @@ class Neuron:
         Z = np.matmul(self.__W, X) + self.__b
         self.__A = 1/(1+np.exp(-Z))
         return self.__A
+
+    def cost(self, Y, A):
+        """
+        Calculates the cost of the neural model
+        """
+        m = Y.shape[1]   # get nr of examples/images
+        log_loss = - (1 / m) * np.sum(Y * np.log(A) + (1 - Y)
+                                        * np.log(1.0000001 - A))
+        return log_loss

@@ -51,3 +51,24 @@ class Neuron:
         Z = np.matmul(self.__W, X) + self.__b
         self.__A = 1/(1+np.exp(-Z))
         return self.__A
+
+    def cost(self, Y, A):
+        """
+        Calculates the cost of the neural model
+        """
+        m = Y.shape[1]   # get nr of examples/images
+        log_loss = - (1 / m) * np.sum(Y * np.log(A) + (1 - Y)
+                                        * np.log(1.0000001 - A))
+        return log_loss
+
+    def evaluate(self, X, Y):
+        """
+        evaluate the neuron's predictions
+        """
+        A = self.forward_prop(X)
+        cost = self.cost(Y, A)
+        # percaktimi klases nfund nqs me 1 do jete po dhe me
+        # 0 do jete jo, nqs mshum se 0.5 esht 1
+        result = np.where(A >= 0.5, 1, 0)
+        # result do jet predictioni 1 ose 0 ndersa cost numri cost
+        return result, cost
