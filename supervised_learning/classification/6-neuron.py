@@ -106,4 +106,4 @@ class Neuron:
             self.gradient_descent(X, Y, A, alpha)
             result, cost = self.evaluate(X, Y)
 
-            return result, cost
+        return result, cost
