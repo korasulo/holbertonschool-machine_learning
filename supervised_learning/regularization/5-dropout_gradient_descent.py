@@ -50,4 +50,3 @@ def dropout_gradient_descent(Y, weights, cache, alpha, keep_prob, L):
 
         weights['W' + str(layer)] -= alpha * dW
         weights['b' + str(layer)] -= alpha * db
-    
