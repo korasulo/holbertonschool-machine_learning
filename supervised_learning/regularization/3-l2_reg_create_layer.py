@@ -1,28 +1,36 @@
 #!/usr/bin/env python3
-"""
-    Create layer with L2 regularization
-"""
-
+'''
+Module that creates a TensorFlow 2.x layer with L2 regularization
+'''
 import tensorflow as tf
 
 
 def l2_reg_create_layer(prev, n, activation, lambtha):
-    """
-        Function that creates a tensorflow layer includes L2 regularization
-    """
-    # set initialization to He et. al
-    initializer = tf.keras.initializers.VarianceScaling(scale=2.0,
-                                                        mode='fan_avg')
+    '''
+    Creates a Dense layer with L2 regularization.
 
-    # create layer Dense with parameters
-    new_layer = (
-        tf.layers.Dense(n,
-                        activation=activation,
-                        kernel_initializer=initializer,
-                        kernel_regularizer=tf.keras.regularizers.l2(lambtha),
-                        name="layer"))
+    Parameters
+    ----------
+    prev : tf.Tensor
+        Output of the previous layer.
+    n : int
+        Number of nodes in the layer.
+    activation : callable
+        Activation function to use (e.g., tf.nn.relu, tf.nn.sigmoid).
+    lambtha : float
+        L2 regularization parameter.
 
-    # apply layer to input
-    output = new_layer(prev)
-
-    return output
+    Returns
+    -------
+    tf.Tensor
+        Output of the new layer.
+    '''
+    init = tf.keras.initializers.VarianceScaling(scale=2.0, mode="fan_avg")
+    l2 = tf.keras.regularizers.L2(lambtha)
+    layer = tf.keras.layers.Dense(
+        units=n,
+        activation=activation,
+        kernel_initializer=init,
+        kernel_regularizer=l2
+    )(prev)
+    return layer
