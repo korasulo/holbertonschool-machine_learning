@@ -334,4 +334,3 @@ class Yolo:
                 os.mkdir("detections")
             cv2.imwrite("./detections/" + file_name, image)
         cv2.destroyAllWindows()
-    
