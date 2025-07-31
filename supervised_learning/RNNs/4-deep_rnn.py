@@ -1,35 +1,28 @@
 #!/usr/bin/env python3
-"""Deep RNN Module"""
+"""Modulus that makes FP to a deep RNN"""
 import numpy as np
 
 
 def deep_rnn(rnn_cells, X, h_0):
-    """Performs forward propagation for a simple RNN:
+    """
+    Function that makes foward propagation
+    """
+    Y = []
+    t, m, i = X.shape
+    _, _, h = h_0.shape
+    time_step = range(t)
+    layers = len(rnn_cells)
 
-    rnn_cells is a list of RNNCell instances of length l that will be used for
-    the forward propagation
-        l is the number of layers
-    X is the data to be used, given as a numpy.ndarray of shape (t, m, i)
-        t is the maximum number of time steps
-        m is the batch size
-        i is the dimensionality of the data
-    h_0 is the initial hidden state, given as a numpy.ndarray
-    of shape (l, m, h)
-        h is the dimensionality of the hidden state
+    H = np.zeros((t+1, layers, m, h))
+    H[0, :, :, :] = h_0
 
-    Returns: H, Y
-        H is a numpy.ndarray containing all of the hidden states
-        Y is a numpy.ndarray containing all of the outputs"""
-
-    H = np.zeros((X.shape[0] + 1, h_0.shape[0],
-                  h_0.shape[1], h_0.shape[2]))
-    H[0] = h_0
-
-    Y = np.zeros((X.shape[0], X.shape[1], rnn_cells[-1].by.shape[1]))
-
-    for i, x_t in enumerate(X):
-        for l, rnn_cell in enumerate(rnn_cells):
-            H[i + 1, l], Y[i] = rnn_cell.forward(H[i, l], x_t)
-            x_t = H[i + 1, l]
-
+    for s in time_step:
+        for la in range(layers):
+            if la == 0:
+                h_next, y_pred = rnn_cells[la].forward(H[s, la], X[s])
+            else:
+                h_next, y_pred = rnn_cells[la].forward(H[s, la], h_next)
+            H[s+1, la, :, :] = h_next
+        Y.append(y_pred)
+    Y = np.array(Y)
     return H, Y
